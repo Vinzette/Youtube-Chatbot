@@ -3,6 +3,9 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
+from dotenv import load_dotenv
+
+load_dotenv()
 
 #1. INDEXING
 #DOC INGGESTION CODEEEE
@@ -28,6 +31,12 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vector_store = FAISS.from_documents(chunks, embeddings)
 vector_store.index_to_docstore_id
 vector_store.get_by_ids(['2436bdb8-3f5f-49c6-8915-0c654c888700'])
+
+#2. Retrieval
+retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 4})
+print(f"retriever.invoke('What is deepmind')")
+
+#3. Augmentation
 
 
 
