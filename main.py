@@ -12,9 +12,15 @@ load_dotenv()
 video_id = "Gfr50f6ZBvo" # only the ID, not full URL
 try:
     
-    transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=["en"])
+    ytt_api = YouTubeTranscriptApi()
+    fetched_transcript = ytt_api.fetch(video_id)
+
+    transcript = " ".join(
+        snippet.text for snippet in fetched_transcript
+    )
+
     # Flatten it to plain text
-    transcript = " ".join(chunk["text"] for chunk in transcript_list)
+    
     print(transcript)
 
 except TranscriptsDisabled:
@@ -55,6 +61,10 @@ retrieved_docs    = retriever.invoke(question)
 context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
 
 final_prompt = prompt.invoke({"context": context_text, "question": question})
+
+#Generation
+answer = model.invoke(final_prompt)
+print(answer.content)
 
 
 
