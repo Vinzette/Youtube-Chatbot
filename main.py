@@ -34,9 +34,27 @@ vector_store.get_by_ids(['2436bdb8-3f5f-49c6-8915-0c654c888700'])
 
 #2. Retrieval
 retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 4})
-print(f"retriever.invoke('What is deepmind')")
+print(retriever.invoke('What is deepmind'))
 
 #3. Augmentation
+model=ChatOpenAI()
+prompt = PromptTemplate(
+    template="""
+      You are a helpful assistant.
+      Answer ONLY from the provided transcript context.
+      If the context is insufficient, just say you don't know.
+
+      {context}
+      Question: {question}
+    """,
+    input_variables = ['context', 'question']
+)
+question          = "is the topic of nuclear fusion discussed in this video? if yes then what was discussed"
+retrieved_docs    = retriever.invoke(question)
+
+context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
+
+final_prompt = prompt.invoke({"context": context_text, "question": question})
 
 
 
