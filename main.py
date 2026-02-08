@@ -71,14 +71,6 @@ parallel_chain = RunnableParallel({
     'question': RunnablePassthrough()
 })
 
-parallel_chain.invoke('who is Demis')
-
 main_chain = parallel_chain | prompt | model | parser
 
 print(main_chain.invoke('Can you tell me what they discussed about quantum mechanics?'))
-
-
-
-
-
-
